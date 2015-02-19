@@ -4,8 +4,18 @@ import Keys._
 object FPInScalaBuild extends Build {
   val opts = Project.defaultSettings ++ Seq(
     scalaVersion := "2.11.4",
-    resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
+    resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
+    //scalatest
+    libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.1" % "test",
+    //spec2
+    libraryDependencies ++= Seq("org.specs2" %% "specs2-core" % "2.4.15" % "test")
   )
+
+
+
+  scalacOptions in Test ++= Seq("-Yrangepos")
+
+
 
   lazy val root =
     Project(id = "fpinscala",
