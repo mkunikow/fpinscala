@@ -100,5 +100,21 @@ object List { // `List` companion object. Contains functions for creating and wo
     case Cons(h, t) => foldLeft(t, f(z,h))(f)
   }
 
+  def sum3(ns: List[Int]) =
+    foldLeft(ns, 0)(_+_)
+
+  def product3(ns: List[Int]) =
+    foldLeft(ns, 0)(_*_)
+
+  def reverse[A](ns: List[A]) =
+    foldLeft(ns, List[A]())((acc , y) => Cons(y, acc))
+
+  def appendWithFoldRight[A](a1: List[A], a2: List[A]): List[A] =
+    foldRight(a1, a2)((a , acc) => Cons(a, acc))
+
+  def appendWithFoldLeft[A](a1: List[A], a2: List[A]): List[A] =
+    foldLeft(reverse(a1), a2)((acc , a) => Cons(a, acc))
+
   def map[A,B](l: List[A])(f: A => B): List[B] = ???
+
 }

@@ -117,4 +117,60 @@ class ListTest  extends FeatureSpec with Matchers {
   }
 
 
+  feature ("The reverse function"){
+    scenario ("should reverse the list"){
+
+      val dataset =
+        Table(
+          ("lst",       "out"       ),
+          (List(1,2,3),  List(3,2,1)),
+          (List(),       List()     )
+        )
+
+      forAll (dataset) { (lst: List[Any], out: List[Any]) =>
+        List.reverse(lst) shouldEqual out
+      }
+    }
+  }
+
+
+  feature ("The appendWithFoldRight"){
+    scenario ("should append list"){
+
+      val dataset =
+        Table(
+          ("a1",        "a2"       , "out"),
+          (List(1,2),    List(3,4)  , List(1,2,3,4))
+        )
+
+      forAll (dataset) { (a1: List[Any], a2: List[Any], out: List[Any]) =>
+        List.appendWithFoldRight(a1, a2) shouldEqual out
+      }
+
+
+//      forAll { (a1: List[Int], a2: List[Int]) =>
+//        List.appendWithFoldRight(a1, a2) shouldEqual List.append(a1, a2)
+//      }
+    }
+  }
+
+
+  feature ("The appendWithFoldLeft"){
+    scenario ("should append list"){
+
+      val dataset =
+        Table(
+          ("a1",        "a2"       , "out"),
+          (List(1,2),    List(3,4)  , List(1,2,3,4))
+        )
+
+      forAll (dataset) { (a1: List[Any], a2: List[Any], out: List[Any]) =>
+        List.appendWithFoldLeft(a1, a2) shouldEqual out
+      }
+    }
+  }
+
+
+
+
 }
