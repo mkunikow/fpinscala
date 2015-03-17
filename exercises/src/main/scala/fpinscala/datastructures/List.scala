@@ -115,6 +115,52 @@ object List { // `List` companion object. Contains functions for creating and wo
   def appendWithFoldLeft[A](a1: List[A], a2: List[A]): List[A] =
     foldLeft(reverse(a1), a2)((acc , a) => Cons(a, acc))
 
-  def map[A,B](l: List[A])(f: A => B): List[B] = ???
+  def add1(l: List[Int]): List[Int] = l match {
+    case Nil => Nil
+    case Cons(h, t) => Cons(h+1, add1(t))
+  }
+
+  def add1v2(l: List[Int]): List[Int] =
+    foldRight(l, List[Int]())((a , acc) => Cons(a + 1, acc))
+
+
+  def add1v3(l: List[Int]): List[Int] =
+    foldLeft(reverse(l), List[Int]())((acc , a) => Cons(a + 1,  acc))
+
+  def doubleToString(l: List[Double]): List[String] =
+    foldRight(l, List[String]())((a , acc) => Cons(a.toString, acc))
+
+  def map[A,B](l: List[A])(f: A => B): List[B] =
+    foldRight(l, List[B]())((a , acc) => Cons(f(a), acc))
+
+  def map_v2[A,B](l: List[A])(f: A => B): List[B] = l match {
+    case Nil => List[B]()
+    case Cons(h, t) => Cons(f(h), map_v2(t)(f))
+  }
+
+  def filter_2[A](l: List[A])(f: A => Boolean): List[A] =
+    foldRight(l, Nil:List[A])((h,t) => if (f(h)) Cons(h,t) else t)
+
+  def filter[A](as: List[A])(f: A => Boolean): List[A] = as match {
+    case Nil => Nil
+    case Cons(h, t) if f(h) => Cons(h, t)
+    case Cons(h, t) => t
+  }
+
+  def concat[A](l: List[List[A]]): List[A] =
+    foldRight(l, Nil:List[A])(append)
+
+  def flatMap[A,B](l: List[A])(f: A => List[B]): List[B] =
+    concat(map(l)(f))
+
+  def flatMap2[A,B](as: List[A])(f: A => List[B]): List[B] =
+    foldRight(as, List[B]())((a , acc) => append(f(a), acc))
+
+
+  def filterWithFlatMap[A](l: List[A])(f: A => Boolean): List[A] =
+  flatMap(l)( (a) => if (f(a)) List(a) else Nil)
+
+
 
 }
+

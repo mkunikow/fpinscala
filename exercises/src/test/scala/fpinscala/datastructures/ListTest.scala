@@ -171,6 +171,136 @@ class ListTest  extends FeatureSpec with Matchers {
   }
 
 
+  feature("The add1"){
 
+    scenario("should add 1 to all elements of the list") {
+      val gt = (x: Int,y: Int) => x > y
+      val dataset =
+        Table(
+          ("in",      "out"),
+          (Nil,       Nil),
+          (List(1,2), List(2,3))
+        )
+      forAll (dataset) { (in: List[Int],  out:List[Int]) =>
+        List.add1(in) shouldEqual out
+      }
+    }
+  }
+
+  feature("The add1_v2"){
+
+    scenario("should add 1 to all elements of the list") {
+      val gt = (x: Int,y: Int) => x > y
+      val dataset =
+        Table(
+          ("in",      "out"),
+          (Nil,       Nil),
+          (List(1,2), List(2,3))
+        )
+      forAll (dataset) { (in: List[Int],  out:List[Int]) =>
+        List.add1v2(in) shouldEqual out
+      }
+    }
+  }
+
+
+  feature("The add1_v3"){
+
+    scenario("should add 1 to all elements of the list") {
+      val gt = (x: Int,y: Int) => x > y
+      val dataset =
+        Table(
+          ("in",      "out"),
+          (Nil,       Nil),
+          (List(1,2), List(2,3))
+        )
+      forAll (dataset) { (in: List[Int],  out:List[Int]) =>
+        List.add1v3(in) shouldEqual out
+      }
+    }
+  }
+
+
+  feature("The map"){
+
+    scenario("should return f applied to each element ") {
+      val gt = (x: Int,y: Int) => x > y
+      val dataset =
+        Table(
+          ("in",      "f",               "out"),
+          (Nil,       (x :Int) => x + 1,   Nil),
+          (List(1,2), (x: Int) => x + 1, List(2,3))
+        )
+      forAll (dataset) { (in: List[Int], f: Int => Int, out:List[Int]) =>
+        List.map(in)(f) shouldEqual out
+      }
+    }
+  }
+
+
+  feature("The filter"){
+
+    scenario("should return all elements where f(e) == true ") {
+      val pos = (x: Int) => x > 0
+      val dataset =
+        Table(
+          ("in",          "f",    "out"      ),
+          (Nil,           pos,    Nil        ),
+          (List(-1,2,3),  pos,    List(2,3)  )
+        )
+      forAll (dataset) { (in: List[Int], f: Int => Boolean, out:List[Int]) =>
+        List.filter(in)(f) shouldEqual out
+      }
+    }
+  }
+
+
+  feature("The append"){
+
+    scenario("should append one list to other") {
+      val dataset =
+        Table(
+          ("a",        "b", "out"),
+          (Nil,         Nil,   Nil),
+          (List(1), List(2),   List(1,2))
+        )
+      forAll (dataset) { (a: List[Int], b: List[Int], out:List[Int]) =>
+        List.append(a,b) shouldEqual out
+      }
+    }
+  }
+
+  feature("The flatMap"){
+
+    scenario("should return f applied to each element ") {
+      val f = (x: Int) => List(x, x)
+      val dataset =
+        Table(
+          ("in",       "f", "out"               ),
+          (Nil,         f,   Nil                ),
+          (List(1),     f,   List(1,1)          ),
+          (List(1,2,3), f,   List(1,1,2,2,3,3)  )
+        )
+      forAll (dataset) { (in: List[Int], f: Int => List[Int], out:List[Int]) =>
+        List.flatMap2(in)(f) shouldEqual out
+      }
+    }
+  }
+
+  feature("The filterWithFlatMap"){
+
+    scenario("should return all elements where f(e) == true ") {
+      val pos = (x: Int) => x > 0
+      val dataset =
+        Table(
+          ("in",          "f",    "out"      ),
+          (Nil,           pos,    Nil        ),
+          (List(-1,2,3),  pos,    List(2,3)  )
+        )
+      forAll (dataset) { (in: List[Int], f: Int => Boolean, out:List[Int]) =>
+        List.filterWithFlatMap(in)(f) shouldEqual out
+      }
+    }
+  }
 
 }
