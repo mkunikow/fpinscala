@@ -303,4 +303,24 @@ class ListTest  extends FeatureSpec with Matchers {
     }
   }
 
+
+  feature("The addPairwise "){
+
+    scenario("should add pairs in list") {
+      val pos = (x: Int) => x > 0
+      val dataset =
+        Table(
+          ("l1",         "l2",         "out"             ),
+          ( Nil,           Nil,           Nil            ),
+          ( List(1,2,3),  List(1, 1 ,2), List(2, 3, 5)   )
+        )
+
+      forAll (dataset) { (l1: List[Int], l2: List[Int], out: List[Int]) =>
+        List.addPairwise(l1, l2) shouldEqual out
+      }
+    }
+  }
+
+
+
 }
