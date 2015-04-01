@@ -16,9 +16,15 @@ object Tree {
     case Branch(a,b) => math.max(maximum(a), maximum(b))
   }
 
-  def depth[A](t: Tree[A]): Int = ???
+  def depth[A](t: Tree[A]): Int = t match {
+    case Leaf(_) => 1
+    case Branch(a, b) => 1 + math.max(depth(a), depth(b))
+  }
 
-  def map[A, B](t: Tree[A])(f: A => B): Tree[B] = ???
+  def map[A, B](t: Tree[A])(f: A => B): Tree[B] = t match {
+    case Leaf(a) => Leaf(f(a))
+    case Branch(a,b) => Branch(map(a)(f), map(b)(f))
+  }
 
   def fold[A, B](t: Tree[A])(f: A => B)(g: (B, B) => B): B = ???
 
