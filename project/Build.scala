@@ -1,5 +1,5 @@
 import sbt._
-import Keys._
+import sbt.Keys._
 
 object FPInScalaBuild extends Build {
   val opts = Project.defaultSettings ++ Seq(
@@ -8,7 +8,9 @@ object FPInScalaBuild extends Build {
     //scalatest
     libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.1" % "test",
     //spec2
-    libraryDependencies ++= Seq("org.specs2" %% "specs2-core" % "2.4.15" % "test")
+    libraryDependencies ++= Seq("org.specs2" %% "specs2-core" % "2.4.15" % "test"),
+    //scalacheck
+     libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.11.0" % "test"
   )
 
 
