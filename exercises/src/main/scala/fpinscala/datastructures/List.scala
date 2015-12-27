@@ -83,6 +83,7 @@ object List { // `List` companion object. Contains functions for creating and wo
   def init[A](l: List[A]): List[A] = {
 
     def initAcc(l: List[A], acc: ListBuffer[A]): List[A] = l match {
+      case Nil => List(acc.toList: _*)
       case Cons(h, Nil) => List(acc.toList: _*)
       case Cons(h,t) => initAcc(t, acc += h)
     }
