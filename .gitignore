@@ -7,6 +7,9 @@ project/boot
 project.vim
 *.old
 .idea
+.project
+.classpath
+.metadata/
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
 
