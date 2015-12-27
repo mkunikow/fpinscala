@@ -53,7 +53,19 @@ object Option {
   def mean(xs: Seq[Double]): Option[Double] =
     if (xs.isEmpty) None
     else Some(xs.sum / xs.length)
-  def variance(xs: Seq[Double]): Option[Double] = sys.error("todo")
+
+  def variance(xs: Seq[Double]): Option[Double] = {
+    val m: Option[Double] = mean(xs)
+    val md: Double = m.getOrElse(0)
+    xs match {
+      case Seq() => None
+      case s => Some(xs.map((x) => math.pow(x - md, 2)).sum / xs.size)
+    }
+
+  }
+
+  def variance2(xs: Seq[Double]): Option[Double] =
+      mean(xs) flatMap (m => mean(xs.map(x => math.pow(x - m, 2))))
 
   def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = sys.error("todo")
 

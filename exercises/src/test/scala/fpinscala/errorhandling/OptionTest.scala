@@ -102,5 +102,31 @@ class OptionTest extends FunSpec with Matchers with PropertyChecks {
     }
 
 
+    describe("The variance function") {
+
+      import Option.{variance, variance2}
+
+      val dataset =
+        Table(
+          ("input",                              "output"       ),
+          (Seq(),                                 None          ),
+          (Seq(600.0,470.0,170.0,430.0,300.0),    Some(21704.0)  )
+        )
+
+      it("should filter value for variance") {
+        forAll (dataset) { (input: Seq[Double], output: Option[Double]) =>
+          variance(input) shouldEqual output
+        }
+      }
+
+
+      it("should filter value for variance2") {
+        forAll (dataset) { (input: Seq[Double], output: Option[Double]) =>
+          variance2(input) shouldEqual output
+        }
+      }
+    }
+
+
   }
 }
