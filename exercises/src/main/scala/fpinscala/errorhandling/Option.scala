@@ -28,6 +28,11 @@ sealed trait Option[+A] {
     case Some(a) if f(a) => this
     case _ => None
   }
+
+  def isDefined(): Boolean = this match {
+    case None => false
+    case _ => true
+  }
 }
 case class Some[+A](get: A) extends Option[A]
 case object None extends Option[Nothing]
@@ -67,9 +72,41 @@ object Option {
   def variance2(xs: Seq[Double]): Option[Double] =
       mean(xs) flatMap (m => mean(xs.map(x => math.pow(x - m, 2))))
 
-  def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = sys.error("todo")
+  def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] =
+    a flatMap (aa =>
+    b map (bb =>
+      f(aa, bb)))
 
-  def sequence[A](a: List[Option[A]]): Option[List[A]] = sys.error("todo")
+  def map2ViaFor[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] =
+    for {
+      aa <- a
+      bb <- b
+    } yield f(aa, bb)
 
-  def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] = sys.error("todo")
+
+  def sequenceViaFoldRight[A](a: List[Option[A]]): Option[List[A]] = {
+    val b: List[A] = a.foldRight(List[A]())((b, acc) => b match {
+      case None => acc
+      case Some(v) => v :: acc
+    })
+    b match {
+      case Nil => None
+      case _ if (a.length != b.length) => None
+      case _ => Some(b)
+    }
+  }
+
+  def traverseViaFoldRight[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] = {
+
+    val b: List[B] = a.foldRight(List[B]())((b, acc) => f(b) match {
+      case None => acc
+      case Some(v) => v :: acc
+    })
+
+    b match {
+      case Nil => None
+      case _ if (a.length != b.length) => None
+      case _ => Some(b)
+    }
+  }
 }
