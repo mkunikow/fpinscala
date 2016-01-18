@@ -1,6 +1,9 @@
 package fpinscala.laziness
 
 import Stream._
+
+import scala.annotation.tailrec
+
 trait Stream[+A] {
 
   def foldRight[B](z: => B)(f: (A, => B) => B): B = // The arrow `=>` in front of the argument type `B` means that the function `f` takes its second argument by name and may choose not to evaluate it.
@@ -17,15 +20,47 @@ trait Stream[+A] {
     case Empty => None
     case Cons(h, t) => if (f(h())) Some(h()) else t().find(f)
   }
-  def take(n: Int): Stream[A] = sys.error("todo")
+  def take(n: Int): Stream[A] = {
+    def go(n: Int, s: Stream[A], acc: Stream[A]): Stream[A] = {
+      if (n == 0) acc
+      else this match {
+        case Cons(h, t) => go(n - 1, t(), cons(h(), acc))
+        case _ => acc
+      }
+    }
+    go(n, this, Stream[A]())
 
-  def drop(n: Int): Stream[A] = sys.error("todo")
+  }
 
-  def takeWhile(p: A => Boolean): Stream[A] = sys.error("todo")
+  @tailrec
+  final def drop(n: Int): Stream[A] = this match {
+    case Cons(_, t) if n > 0 => t().drop(n - 1)
+    case _ => this
+  }
+
+  def takeWhile(p: A => Boolean): Stream[A] = this match {
+    case Cons(h, t) if p(h()) => cons(h(), t() takeWhile(p))
+    case _ => empty
+  }
 
   def forAll(p: A => Boolean): Boolean = sys.error("todo")
 
   def headOption: Option[A] = sys.error("todo")
+
+  def toListRecursive: List[A] = this match {
+    case Cons(h,t) => h() :: t().toListRecursive
+    case _ => List()
+  }
+
+  def toList: List[A] = {
+    @annotation.tailrec
+    def go(s: Stream[A], acc: List[A]): List[A] = s match {
+      case Cons(h,t) => go(t(), h() :: acc)
+      case _ => acc
+    }
+    go(this, List[A]())
+  }
+
 
   // 5.7 map, filter, append, flatmap using foldRight. Part of the exercise is
   // writing your own function signatures.
