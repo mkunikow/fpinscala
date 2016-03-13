@@ -159,19 +159,33 @@ class OptionTest extends FunSpec with Matchers with PropertyChecks {
 
     describe("The sequence function") {
 
-      import Option.sequenceViaFoldRight
+      import Option.{sequenceViaFoldRight, sequence, sequence_1}
 
       val dataset =
         Table(
           ("input",                              "output"         ),
-          (List[Option[Int]](),                   None            ),
+          (List[Option[Int]](),                   Some(List())    ),
           (List(Some(1), Some(2), None, Some(3)), None            ),
           (List(Some(1), Some(2)),                Some(List(1,2)) )
         )
 
-      it("should convert List[Option[A]] to Option[List[A]]") {
+      it("sequenceViaFoldRight should convert List[Option[A]] to Option[List[A]]") {
         forAll (dataset) { (input: List[Option[Int]], output: Option[List[Int]]) =>
           sequenceViaFoldRight(input) shouldEqual output
+        }
+      }
+
+
+      it("sequence should convert List[Option[A]] to Option[List[A]]") {
+        forAll (dataset) { (input: List[Option[Int]], output: Option[List[Int]]) =>
+          sequence(input) shouldEqual output
+        }
+      }
+
+
+      it("sequence_1 should convert List[Option[A]] to Option[List[A]]") {
+        forAll (dataset) { (input: List[Option[Int]], output: Option[List[Int]]) =>
+          sequence_1(input) shouldEqual output
         }
       }
     }

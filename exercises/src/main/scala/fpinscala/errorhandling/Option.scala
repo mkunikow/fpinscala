@@ -84,13 +84,23 @@ object Option {
     } yield f(aa, bb)
 
 
+
+  def sequence[A](a: List[Option[A]]): Option[List[A]] =
+    a match {
+      case Nil => Some(Nil)
+      case h :: t => h flatMap (hh => sequence(t) map (hh :: _))
+    }
+
+  def sequence_1[A](a: List[Option[A]]): Option[List[A]] =
+    a.foldRight[Option[List[A]]](Some(Nil))((x,y) => map2(x,y)(_ :: _))
+
   def sequenceViaFoldRight[A](a: List[Option[A]]): Option[List[A]] = {
     val b: List[A] = a.foldRight(List[A]())((b, acc) => b match {
       case None => acc
       case Some(v) => v :: acc
     })
     b match {
-      case Nil => None
+      case Nil => Some(List())
       case _ if (a.length != b.length) => None
       case _ => Some(b)
     }
@@ -109,4 +119,14 @@ object Option {
       case _ => Some(b)
     }
   }
+
+  def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] =
+    a match {
+      case Nil => Some(Nil)
+      case h::t => map2(f(h), traverse(t)(f))(_ :: _)
+    }
+
+  def traverse_1[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] =
+    a.foldRight[Option[List[B]]](Some(Nil))((h,t) => map2(f(h),t)(_ :: _))
+
 }
