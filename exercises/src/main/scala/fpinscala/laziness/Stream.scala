@@ -44,7 +44,7 @@ trait Stream[+A] {
   }
 
   def takeWhile2(p: A => Boolean): Stream[A] =
-    foldRight(Empty[A])((a,b) =>
+    foldRight(empty[A])((a,b) =>
       if(p(a)) cons(a,b)
       else b)
 
@@ -78,11 +78,11 @@ trait Stream[+A] {
   // writing your own function signatures.
 
   def map[B](f: A => B): Stream[B] =
-    foldRight(Empty[B])((a, acc) =>
+    foldRight(empty[B])((a, acc) =>
       cons(f(a), acc))
 
   def filter(p: A => Boolean): Stream[A] =
-    foldRight(Empty[A])((a, acc) =>
+    foldRight(empty[A])((a, acc) =>
       if (p(a)) cons(a, acc)
       else acc
   )
@@ -94,7 +94,7 @@ trait Stream[+A] {
 
 
   def flatMap[B](f: A => Stream[B]): Stream[B] =
-    foldRight(Empty[B])((a, acc) => f(a) append acc
+    foldRight(empty[B])((a, acc) => f(a) append acc
   )
 
   def mapViaUnfold[B](f: A => B): Stream[B] =
